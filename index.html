@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <title>ИнтаГадай — угадай цену квартиры в Коми</title>
+  <meta name="description" content="Игра: угадай реальную стоимость квартир в Инте и Коми по объявлениям Авито. 10 раундов, баллы и неожиданный финал.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Golos+Text:wght@400;500;600;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='20' fill='%23012D6E'/><text x='50' y='68' font-size='52' text-anchor='middle' fill='white' font-family='Arial' font-weight='bold'>₽</text></svg>">
+</head>
+<body>
+
+  <!-- Прогресс-бар игры -->
+  <div id="progress-wrap" class="hidden">
+    <div class="progress-meta">
+      <span id="progress-label">Квартира 1 из 10</span>
+      <span id="progress-score">0 баллов</span>
+    </div>
+    <div class="progress-track"><div id="progress-bar"></div></div>
+  </div>
+
+  <main id="app">
+
+    <!-- ЭКРАН 1: Стартовый -->
+    <section id="screen-start" class="screen">
+      <div class="start-card">
+        <div class="logo-badge">🎮</div>
+        <h1 class="title">Инта<span class="accent">Гадай</span></h1>
+        <p class="subtitle">Угадай цену квартиры в Коми</p>
+
+        <div class="rules">
+          <h2>Как играть</h2>
+          <ol>
+            <li>📍 Тебе показывают реальную квартиру из Инты — <b>10 раундов</b>.</li>
+            <li>🖼️ Листай фотографии, изучай планировку и ремонт.</li>
+            <li>🎚️ Двигай бегунок и ставь свою цену.</li>
+            <li>💰 Узнай настоящую цену и получи баллы за точность.</li>
+          </ol>
+          <p class="rules-hint">Чем ближе твоя цена к реальной — тем больше баллов: до <b>100 за раунд</b>. А в финале узнаешь, кто ты: жадный студент, адекватный квартирант или транжира 😏</p>
+        </div>
+
+        <button id="btn-start" class="btn-primary">Запустить игру</button>
+        <p class="footnote">Данные: реальные объявления Авито · Коми, г. Инта</p>
+      </div>
+    </section>
+
+    <!-- ЭКРАН 2: Раунд (лот) -->
+    <section id="screen-round" class="screen hidden">
+      <div class="round-card">
+        <div class="street-chip" id="round-street"></div>
+
+        <!-- Галерея -->
+        <div class="gallery" id="gallery"></div>
+        <div class="dots" id="gallery-dots"></div>
+
+        <!-- Описание и оценка -->
+        <div class="round-body">
+          <p class="desc" id="round-desc"></p>
+
+          <div class="guess-box">
+            <div class="guess-label">Твоя цена:</div>
+            <div class="guess-value" id="guess-value">300 000 ₽</div>
+            <input type="range" id="price-slider" min="10000" max="2500000" step="1000" value="300000"
+                   aria-label="Оценка цены квартиры">
+            <div class="scale-marks"><span>10 тыс.</span><span>1,25 млн</span><span>2,5 млн</span></div>
+          </div>
+
+          <button id="btn-evaluate" class="btn-primary">Оценить</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- ЭКРАН 3: Результат раунда -->
+    <section id="screen-result" class="screen hidden">
+      <div class="result-card">
+        <div class="verdict-emoji" id="res-emoji"></div>
+        <h2 class="verdict" id="res-verdict"></h2>
+
+        <div class="prices-grid">
+          <div class="price-cell you">
+            <span class="price-cap">Ты ставил</span>
+            <span class="price-num" id="res-guess"></span>
+          </div>
+          <div class="price-cell real">
+            <span class="price-cap">Реальная цена</span>
+            <span class="price-num" id="res-real"></span>
+          </div>
+        </div>
+
+        <div class="diff-line" id="res-diff"></div>
+        <div class="points-line" id="res-points"></div>
+
+        <div class="round-details" id="res-details"></div>
+
+        <a id="res-link" class="link-avito" href="#" target="_blank" rel="noopener">
+          Смотреть объявление на Авито ↗
+        </a>
+        <button id="btn-next" class="btn-primary">Следующая квартира</button>
+      </div>
+    </section>
+
+    <!-- ЭКРАН 4: Финал -->
+    <section id="screen-final" class="screen hidden">
+      <div class="final-card">
+        <div class="final-emoji" id="fin-emoji"></div>
+        <p class="final-kicker">Твой результат</p>
+        <h2 class="final-title" id="fin-title"></h2>
+        <p class="final-desc" id="fin-desc"></p>
+
+        <div class="final-stats">
+          <div class="stat">
+            <span class="stat-num" id="fin-score"></span>
+            <span class="stat-cap">баллов из 1000</span>
+          </div>
+          <div class="stat">
+            <span class="stat-num" id="fin-accuracy"></span>
+            <span class="stat-cap">средняя точность</span>
+          </div>
+          <div class="stat">
+            <span class="stat-num" id="fin-overpay"></span>
+            <span class="stat-cap" id="fin-overpay-cap"></span>
+          </div>
+        </div>
+
+        <div class="rounds-list" id="fin-rounds"></div>
+
+        <button id="btn-restart" class="btn-primary">Играть ещё раз</button>
+        <p class="footnote">Данные: реальные объявления Авито · Коми, г. Инта · Сделано для creative_hse_2026</p>
+      </div>
+    </section>
+
+  </main>
+
+  <script src="data.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>
